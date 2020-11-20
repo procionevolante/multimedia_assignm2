@@ -15,12 +15,18 @@ bufsize=( 500k 400k )
 i=0
 while [ $i -lt ${#bitrates[@]} ]; do
 	outfile="${basename}-${bitrates[i]}.mp4"
-	# go in here only if file has not been generated
+	# go in here only if file has not been generated yet
 	if ! [ -f "$outfile" ]; then
-		# putting keyframes each 1s (24 frames)
+		fps="$(ffprobe "$1" |& grep Video: | tr , '\n' | grep fps | cut -d ' ' -f 2)"
+		if [[ "$fps" =~ "\." ]]; then
+			echo get a proper video that has an integer amount of frames per \
+				second otherwise this would becomes complicated
+			exit 2
+		fi
+		# putting keyframes each 1s (30 frames)
 		ffmpeg -y -i "$1" \
-			-c:a copy \
-			-c:v libx264 -x264-params 'keyint=24:min-keyint=24' \
+			-an \
+			-c:v libx264 -x264-params "keyint=${fps}:min-keyint=${fps}" \
 			-b:v ${bitrates[i]} \
 			-maxrate ${bitrates[i]} \
 			-bufsize ${bufsize[i]} \
