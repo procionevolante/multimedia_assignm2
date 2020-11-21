@@ -5,6 +5,8 @@ if [ $# -lt 1 ]; then
 	exit 1
 fi
 
+outdir="$(dirname "$1")"
+
 echo "len($outdir)=${#outdir}"
 MP4Box -dash 2000 \
 	-rap -frag-rap \

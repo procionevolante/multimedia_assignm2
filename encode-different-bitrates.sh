@@ -10,8 +10,8 @@ fi
 # ${#0} = length of $0
 # $((expression)) = mathematical evaluation of expression
 basename="$(echo "$1" | cut -c 1-$((${#1}-4)))"
-bitrates=( 800k 400k )
-bufsize=( 500k 400k )
+bitrates=( 2000k 1500k 800k 400k )
+bufsize=( 1500k 1000k 500k 400k )
 i=0
 while [ $i -lt ${#bitrates[@]} ]; do
 	outfile="${basename}-${bitrates[i]}.mp4"
